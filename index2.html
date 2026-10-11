@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-STAS · 스타틴 치료 안전성 및 내약성 종합 평가</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #eff6ff;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 15px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 30px 20px;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            word-break: keep-all;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            word-break: keep-all;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+
+        .question-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .question-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            word-break: keep-all;
+        }
+
+        .options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-option {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #fff;
+            color: var(--text-sub);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-option.selected-yes {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-option.selected-no {
+            background-color: #64748b;
+            color: white;
+            border-color: #64748b;
+        }
+
+        .action-area {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            max-width: 400px;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #1e40af;
+        }
+
+        .result-card {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .result-score {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .guide-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .guide-box ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 40px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>S-STAS · 임상 종합 평가</h1>
+        <p><strong>스타틴 치료 안전성 및 내약성 척도</strong></p>
+        <p style="margin-top: 8px; font-size: 0.85rem;">지난 3개월간 경험하신 신체 반응과 진단 피검사 수치를 바탕으로 체크해 주세요.</p>
+    </header>
+
+    <form id="assessmentForm">
+        <!-- 영역 1 -->
+        <div class="section-title">영역 1. 근육 병증 및 근골격계 안전성</div>
+        <div class="question-card" data-q="q1_1" data-score-type="normal">
+            <div class="question-text">1.1 통증이나 피로감이 양측 대칭적(허벅지, 종아리 등)으로 발생하며, 약 복용 시작/증량 후 4주 이내에 시작되었습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q1_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q1_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q1_2" data-score-type="normal">
+            <div class="question-text">1.2 근육 불편감이 격렬한 운동이나 신체 활동과 상관없이 휴식 중에도 지속됩니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q1_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q1_2', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q1_3" data-score-type="normal">
+            <div class="question-text">1.3 혈액 검사상 근육 효소(CK) 수치가 정상 상한치의 3배 이상으로 상승한 적이 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q1_3', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q1_3', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q1_4" data-score-type="normal">
+            <div class="question-text">1.4 스타틴 복용을 일시 중단했을 때 2~4주 내에 통증이 사라지고, 재복용 시 동일하게 재발합니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q1_4', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q1_4', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <!-- 영역 2 -->
+        <div class="section-title">영역 2. 당 대사 및 췌장 베네핏 분석</div>
+        <div class="question-card" data-q="q2_1" data-score-type="normal">
+            <div class="question-text">2.1 스타틴 복용 전 이미 공복 혈당 장애(100~125 mg/dL) 또는 당뇨 전 단계/당뇨병을 진단받은 적이 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q2_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q2_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q2_2" data-score-type="reverse">
+            <div class="question-text">2.2 스타틴 복용 후 당화혈색소(HbA1c) 수치 상승 폭이 0.1%p 미만으로 미세하게 유지되고 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q2_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q2_2', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q2_3" data-score-type="reverse">
+            <div class="question-text">2.3 고강도 스타틴 복용 중이면서 식이 요법 및 운동 치료를 적극 병행하고 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q2_3', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q2_3', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <!-- 영역 3 -->
+        <div class="section-title">영역 3. 간 효소계 및 대사 장기 안전성</div>
+        <div class="question-card" data-q="q3_1" data-score-type="normal">
+            <div class="question-text">3.1 혈액 검사상 간 효소(ALT/AST) 수치가 정상 상한치의 3배를 지속적으로 초과하여 상승한 적이 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q3_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q3_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q3_2" data-score-type="normal">
+            <div class="question-text">3.2 황달, 짙은 소변, 지속되는 우상복부 통증이나 원인 불명의 심한 구토 증상이 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q3_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q3_2', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q3_3" data-score-type="reverse">
+            <div class="question-text">3.3 정기 피검사(간 기능, 신장 기능 등)를 최소 6개월~1년에 1회 이상 정기적으로 이행하고 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q3_3', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q3_3', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <!-- 영역 4 -->
+        <div class="section-title">영역 4. 신경-인지 기능 및 심리·노시보 지표</div>
+        <div class="question-card" data-q="q4_1" data-score-type="normal">
+            <div class="question-text">4.1 스타틴 복용 후 주의력, 작업 기억력 등 객관적인 신경 심리 검사상 저하 소견을 진단받았습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q4_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q4_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q4_2" data-score-type="normal">
+            <div class="question-text">4.2 스타틴 부작용 뉴스나 주변의 우려를 접한 후 약물 복용 시 불안감이나 신체 증상이 심화됩니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q4_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q4_2', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q4_3" data-score-type="reverse">
+            <div class="question-text">4.3 수면 장애(불면증)나 우울감이 스타틴 복용 전과 비교했을 때 큰 차이 없이 유의미하지 않게 유지됩니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q4_3', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q4_3', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <!-- 영역 5 -->
+        <div class="section-title">영역 5. 순응도 및 뇌·심혈관 복합 순이익</div>
+        <div class="question-card" data-q="q5_1" data-score-type="normal">
+            <div class="question-text">5.1 부작용에 대한 두려움으로 담당 의사 상의 없이 복용을 임의로 중단하거나 임의 감량한 적이 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q5_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q5_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card" data-q="q5_2" data-score-type="reverse">
+            <div class="question-text">5.2 본인이 심뇌혈관 고위험군에 속함을 인지하고 스타틴의 사망률 감소 효과를 이해하고 계십니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q5_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q5_2', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <button type="button" class="btn-submit" onclick="calculateResult()">종합 결과 확인하기</button>
+        </div>
+    </form>
+
+    <!-- 결과 영역 -->
+    <div id="resultCard" class="result-card">
+        <div style="text-align: center;">
+            <span id="resultBadge" class="result-badge">결과 평가 중</span>
+            <div id="resultScore" class="result-score">0 / 15점</div>
+        </div>
+        <div id="resultGuide" class="guide-box">
+            <!-- 가이드 텍스트가 동적으로 삽입됩니다. -->
+        </div>
+    </div>
+
+    <div class="footer-text">
+        © TODAYONEARTH · 본 진단은 개인 임상 참고용이며 전문의의 의학적 진단을 대체할 수 없습니다.
+    </div>
+</div>
+
+<script>
+    const answers = {};
+
+    function selectOption(questionId, val, btn) {
+        answers[questionId] = val;
+        
+        const parent = btn.parentElement;
+        const buttons = parent.querySelectorAll('.btn-option');
+        buttons.forEach(b => {
+            b.classList.remove('selected-yes', 'selected-no');
+        });
+
+        if (val === 1) {
+            btn.classList.add('selected-yes');
+        } else {
+            btn.classList.add('selected-no');
+        }
+    }
+
+    function calculateResult() {
+        const totalQuestions = 15;
+        if (Object.keys(answers).length < totalQuestions) {
+            alert("모든 문항에 답변해 주세요. (남은 문항: " + (totalQuestions - Object.keys(answers).length) + "개)");
+            return;
+        }
+
+        let score = 0;
+        // 일반 문항 (그렇다 = 1점): q1_1, q1_2, q1_3, q1_4, q2_1, q3_1, q3_2, q4_1, q4_2, q5_1
+        // 역채점 문항 (그렇다 = 1점): q2_2, q2_3, q3_3, q4_3, q5_2
+        
+        for (let key in answers) {
+            score += answers[key];
+        }
+
+        const resultCard = document.getElementById('resultCard');
+        const resultScore = document.getElementById('resultScore');
+        const resultBadge = document.getElementById('resultBadge');
+        const resultGuide = document.getElementById('resultGuide');
+
+        resultCard.style.display = 'block';
+        resultScore.innerText = score + " / 15점";
+
+        if (score <= 5) {
+            resultBadge.style.backgroundColor = 'var(--danger)';
+            resultBadge.innerText = '🔴 0 ~ 5점: [위험/부순응] 약물 중단 위험 및 오인 부작용 우려';
+            resultGuide.innerHTML = `
+                <strong>🩺 전문의 처방 지침 (위험 단계)</strong>
+                <ul>
+                    <li>부작용 불안(노시보 효과) 또는 임의 중단으로 심뇌혈관 재발 위험이 극도로 높아진 상태입니다.</li>
+                    <li>보고되는 증상의 90% 이상은 약물 자체가 아닌 기타 원인일 수 있습니다.</li>
+                    <li><strong>즉시 임의 중단을 멈추시고</strong> 담당 처방의와 CK(근육 효소) 및 간 수치 피검사를 진행하세요.</li>
+                    <li>실제 내약성 문제일 경우, 약을 끊기보다 <strong>성분 교체(예: Rosuvastatin/Pravastatin)나 용량 조절</strong>로 해결 가능합니다.</li>
+                </ul>
+            `;
+        } else if (score <= 10) {
+            resultBadge.style.backgroundColor = 'var(--warning)';
+            resultBadge.innerText = '🟡 6 ~ 10점: [경계/모니터링] 관리가 가능한 일시적 자극 및 위험군';
+            resultGuide.innerHTML = `
+                <strong>🩺 전문의 처방 지침 (경계 단계)</strong>
+                <ul>
+                    <li>미세한 당 대사 변화나 초기 적응기를 겪고 계시나, 스타틴의 뇌·심혈관 예방 이점이 훨씬 큽니다.</li>
+                    <li>기저 혈당이 높다면 스타틴 중단이 아닌 <strong>식단·운동 요법 강화를 통해 진행을 방지</strong>하세요.</li>
+                    <li>3~6개월 단위 정기 혈액 검사로 수치를 관찰하면 안전하게 복용을 유지할 수 있습니다.</li>
+                </ul>
+            `;
+        } else {
+            resultBadge.style.backgroundColor = 'var(--success)';
+            resultBadge.innerText = '🟢 11 ~ 15점: [최적/안전] 심뇌혈관 보호 이점이 완벽히 발휘되는 상태';
+            resultGuide.innerHTML = `
+                <strong>🩺 전문의 처방 지침 (최적 단계)</strong>
+                <ul>
+                    <li>스타틴 치료의 임상적 이점(혈관 보호, 유해 LDL 감소)을 완벽하게 누리고 계십니다.</li>
+                    <li>약물 내약성과 복용 순응도가 매우 뛰어납니다.</li>
+                    <li>불안감이나 죄책감 없이 현재의 복용 루틴과 정기 검진을 꾸준히 유지해 주세요!</li>
+                </ul>
+            `;
+        }
+
+        resultCard.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
